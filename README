@@ -110,13 +110,20 @@ firewall rules similar to above:
     * Enable IP forwarding:
       (sysctl net.inet.ip.forwarding=1)
 
-    * Add rules to /etc/pf.conf to intercept traffic;
-      OpenBSD 4.7 and later:
-      (match in on $extif proto tcp to any port {443,80,993,995,6697} \
-       rdr-to lo0 port $listenPort)
-      OpenBSD up to 4.6 and FreeBSD:
-      (rdr on $extif proto tcp to any port {443,80,993,995,6697} \
-       -> lo0 port $listenPort)
+    * Add rules to /etc/pf.conf to intercept traffic; OpenBSD 4.7 and later:
+      (match in on $extif proto tcp to any port {443,993,995,6697} \
+       rdr-to lo0 port $listenPort
+       match in on $extif proto tcp to any port 80 \
+       rdr-to lo0 port $httpListenPort)
+
+    * The same using OpenBSD up to 4.6 and FreeBSD:
+      (rdr on $extif proto tcp to any port {443,993,995,6697} \
+       -> lo0 port $listenPort
+       rdr on $extif proto tcp to any port 80 \
+       -> lo0 port $httpListenPort)
+
+    * Reload pf rules:
+      (pfctl -f /etc/pf.conf)
 
 Running arpspoof
 --------------------------
