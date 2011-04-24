@@ -21,6 +21,8 @@
 //#define HAVE_PF 
 #define HAVE_NETFILTER 
 
+#include "util/Destination.hpp"
+
 #include <arpa/inet.h>
 
 #ifdef HAVE_NETFILTER
@@ -37,9 +39,6 @@
 #include <netinet/in.h>
 #include <net/pfvar.h>
 #endif
-
-
-#include "util/Destination.hpp"
 
 int Destination::getOriginalDestination(boost::asio::ip::tcp::socket &socket,
 					boost::asio::ip::tcp::endpoint &originalDestination)
