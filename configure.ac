@@ -19,4 +19,10 @@ AC_CHECK_HEADER([boost/thread.hpp],
 AC_CHECK_HEADER([openssl/ssl.h],
 	[],
 	AC_MSG_ERROR([openssl (libssl-dev) library not installed.]))
+AC_ARG_ENABLE(pf,
+	AS_HELP_STRING([--enable-pf],
+	               [Enable BSD pf support instead of Linux netfilter]),,)
+if test "x$enable_pf" = "xyes"; then
+	CPPFLAGS="-DHAVE_PF $CPPFLAGS"
+fi
 AC_OUTPUT(Makefile)
