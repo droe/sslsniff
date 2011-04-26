@@ -1,22 +1,21 @@
 AC_INIT(sslsniff.cpp)
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE(sslsniff,0.8)
+AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_LANG_CPLUSPLUS
+
+AX_CHECK_OPENSSL
+
+BOOST_REQUIRE([1.35])
+BOOST_ASIO([mt])
+BOOST_FILESYSTEM([mt])
+BOOST_THREADS([mt])
+
 AC_CHECK_HEADER([log4cpp/Category.hh],
 	[],
 	AC_MSG_ERROR([log4cpp library is not installed.]))
-AC_CHECK_HEADER([boost/asio.hpp],
-	[],
-	AC_MSG_ERROR([libboost1.35-dev library is not installed.]))
-AC_CHECK_HEADER([boost/filesystem.hpp],
-	[],
-	AC_MSG_ERROR([libboost-filesystem1.35-dev library is not installed.]))
-AC_CHECK_HEADER([boost/thread.hpp],
-	[],
-	AC_MSG_ERROR([libboost-thread1.35-dev library is not installed.]))
-AC_CHECK_HEADER([openssl/ssl.h],
-	[],
-	AC_MSG_ERROR([openssl (libssl-dev) library not installed.]))
+
 AC_OUTPUT(Makefile)
