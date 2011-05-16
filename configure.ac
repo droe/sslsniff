@@ -14,8 +14,6 @@ BOOST_ASIO([mt])
 BOOST_FILESYSTEM([mt])
 BOOST_THREADS([mt])
 
-AC_CHECK_HEADER([log4cpp/Category.hh],
-	[],
-	AC_MSG_ERROR([log4cpp library is not installed.]))
+AM_PATH_LOG4CPP([])
 
 AC_OUTPUT(Makefile)
