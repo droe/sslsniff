@@ -14,8 +14,7 @@ The three steps to get this running are:
 Installing sslsniff
 -------------------
 
-    * Unpack sslsniff-0.8.tar.gz, run "./configure" and "make". On BSD systems,
-      you'll have to pass --enable-pf to configure.
+    * Unpack sslsniff-0.8.tar.gz, run "./configure" and "make".
     * There are two ways to run this: in "authority" mode or "targeted" mode.
 
     Authority Mode:
@@ -102,8 +101,8 @@ Setting up iptables
 Setting up pf
 -------------
 
-Basic support for pf is now included when passing "--enable-pf" to
-configure when building. Set up firewall rules similar to those above.
+Support for pf is now automatically included on BSD systems.
+Set up firewall rules similar to those above.
 
 Running arpspoof
 --------------------------

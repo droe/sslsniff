@@ -19,10 +19,23 @@ AC_CHECK_HEADER([boost/thread.hpp],
 AC_CHECK_HEADER([openssl/ssl.h],
 	[],
 	AC_MSG_ERROR([openssl (libssl-dev) library not installed.]))
+
+AC_CHECK_HEADER([net/pfvar.h],[natapi="pf"],,[-])
+AC_CHECK_HEADER([linux/netfilter_ipv4.h],[natapi="netfilter"],,[-])
 AC_ARG_ENABLE(pf,
 	AS_HELP_STRING([--enable-pf],
-	               [Enable BSD pf support instead of Linux netfilter]),,)
-if test "x$enable_pf" = "xyes"; then
+	               [Enable BSD pf support, overriding autodetection]),
+	               [natapi="pf"],)
+case "$natapi" in
+netfilter)
+	CPPFLAGS="-DHAVE_NETFILTER $CPPFLAGS"
+	;;
+pf)
 	CPPFLAGS="-DHAVE_PF $CPPFLAGS"
-fi
+	;;
+*)
+	AC_MSG_ERROR([neither Linux NetFilter nor BSD pf detected.])
+	;;
+esac
+
 AC_OUTPUT(Makefile)
