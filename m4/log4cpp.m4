@@ -1,6 +1,6 @@
 # Configure paths for LOG4CPP
 # Owen Taylor     97-11-3
-# Daniel Roethlisberger, 2011-05-16
+# Daniel Roethlisberger, 2011-05-16, 2011-06-30
 
 dnl AM_PATH_LOG4CPP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for LOG4CPP, and define LOG4CPP_CFLAGS and LOG4CPP_LIBS
@@ -55,6 +55,7 @@ dnl
 #include <log4cpp/Category.hh>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int 
 main ()
