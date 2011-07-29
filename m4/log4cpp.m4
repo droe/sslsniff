@@ -93,6 +93,7 @@ main ()
                log4cpp_major, log4cpp_minor, log4cpp_micro);
         printf("*** You need a version of LOG4CPP newer than %d.%d.%d. The latest version of\n",
 	       major, minor, micro);
+        printf("*** LOG4CPP is available at http://log4cpp.sf.net/\n");
         printf("***\n");
         printf("*** If you have already installed a sufficiently new version, this error\n");
         printf("*** probably means that the wrong copy of the log4cpp-config shell script is\n");
@@ -117,11 +118,12 @@ main ()
      ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
-if test "$LOG4CPP_CONFIG" = "no" ; then
-echo "*** The log4cpp-config script installed by LOG4CPP could not be found"
+     if test "$LOG4CPP_CONFIG" = "no" ; then
+       echo "*** The log4cpp-config script installed by LOG4CPP could not be found"
        echo "*** If LOG4CPP was installed in PREFIX, make sure PREFIX/bin is in"
        echo "*** your path, or set the LOG4CPP_CONFIG environment variable to the"
        echo "*** full path to log4cpp-config."
+       echo "*** LOG4CPP can be obtained from http://log4cpp.sf.net/"
      else
        if test -f conf.log4cpptest ; then
         :
