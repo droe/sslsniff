@@ -65,6 +65,30 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
   X509_gmtime_adj(X509_get_notAfter(request), (long)60*60*24*365);
   X509_set_pubkey(request, this->leafPair);
 
+  X509V3_CTX ctx;
+  X509_EXTENSION *ext;
+  X509V3_set_ctx(&ctx, authority->getCert(), request, NULL, NULL, 0);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"basicConstraints",
+			(char*)"critical,CA:FALSE"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"keyUsage",
+			(char*)"digitalSignature,keyEncipherment"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"extendedKeyUsage",
+			(char*)"serverAuth"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"subjectKeyIdentifier",
+			(char*)"hash"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"authorityKeyIdentifier",
+			(char*)"keyid,issuer:always"), -1);
+  X509_EXTENSION_free(ext);
+
   X509_sign(request, authority->getKey(), EVP_sha1());
 
   Certificate *leaf = new Certificate();
