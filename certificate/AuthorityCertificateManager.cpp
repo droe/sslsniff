@@ -56,7 +56,7 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
   X509_NAME *issuerName   = X509_get_subject_name(authority->getCert());
   X509 *request           = X509_new();
 
-  X509_set_version(request, 3);
+  X509_set_version(request, 2); /* version is zero-based: 2 is X509v3 */
   X509_set_subject_name(request, serverName);
   X509_set_issuer_name(request, issuerName);
 
