@@ -67,6 +67,7 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
 
   X509V3_CTX ctx;
   X509_EXTENSION *ext;
+  int extpos;
   X509V3_set_ctx(&ctx, authority->getCert(), request, NULL, NULL, 0);
   X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
 			(char*)"basicConstraints",
@@ -88,6 +89,10 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
 			(char*)"authorityKeyIdentifier",
 			(char*)"keyid,issuer:always"), -1);
   X509_EXTENSION_free(ext);
+  extpos = X509_get_ext_by_NID(serverCertificate, NID_subject_alt_name, -1);
+  if (extpos != -1) {
+    X509_add_ext(request, X509_get_ext(serverCertificate, extpos), -1);
+  }
 
   X509_sign(request, authority->getKey(), EVP_sha1());
 
