@@ -27,7 +27,7 @@
 using namespace boost::asio;
 
 OCSPDenier* OCSPDenier::ocspDenier    = new OCSPDenier();
-const char* OCSPDenier::ocspResponse  = "HTTP/1.0 200 Ok\r\ncontent-type: application/ocsp-response\r\ncontent-transfer-encoding: binary\r\ncontent-length: 1\r\nconnection: close\r\n\r\n3";
+const char* OCSPDenier::ocspResponse  = "HTTP/1.0 200 Ok\r\ncontent-type: application/ocsp-response\r\ncontent-transfer-encoding: binary\r\ncontent-length: 5\r\nconnection: close\r\n\r\n\x30\x03\x0a\x01\x03";
 
 OCSPDenier* OCSPDenier::getInstance() {
   return ocspDenier;
