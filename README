@@ -14,9 +14,7 @@ The three steps to get this running are:
 Installing sslsniff
 -------------------
 
-    * Unpack sslsniff-0.8.tar.gz, run "./configure" and "make". (You'll have
-      to make some changes to build on BSD systems, see below under "Setting up 
-      pf")
+    * Unpack sslsniff-0.8.tar.gz, run "./configure" and "make".
     * There are two ways to run this: in "authority" mode or "targeted" mode.
 
     Authority Mode:
@@ -103,9 +101,8 @@ Setting up iptables
 Setting up pf
 -------------
 
-Basic support for pf is now included. Change util/Destination.cpp by
-undefining HAVE_NETFILTER and defining HAVE_PF at the top, then set up
-firewall rules similar to above:
+Support for pf is now automatically included on BSD systems.
+Set up firewall rules similar to those above:
 
     * Enable IP forwarding:
       (sysctl net.inet.ip.forwarding=1)

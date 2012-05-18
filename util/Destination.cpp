@@ -17,9 +17,9 @@
  * USA
  */
 
-// XXX define one of these through autoconf
-//#define HAVE_PF 
+#if !defined(HAVE_NETFILTER) && !defined(HAVE_PF)
 #define HAVE_NETFILTER 
+#endif
 
 #include "util/Destination.hpp"
 

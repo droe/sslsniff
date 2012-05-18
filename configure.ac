@@ -16,4 +16,22 @@ BOOST_THREADS([mt])
 
 AM_PATH_LOG4CPP([])
 
+AC_CHECK_HEADER([net/pfvar.h],[natapi="pf"],,[-])
+AC_CHECK_HEADER([linux/netfilter_ipv4.h],[natapi="netfilter"],,[-])
+AC_ARG_ENABLE(pf,
+	AS_HELP_STRING([--enable-pf],
+	               [Enable BSD pf support, overriding autodetection]),
+	               [natapi="pf"],)
+case "$natapi" in
+netfilter)
+	CPPFLAGS="-DHAVE_NETFILTER $CPPFLAGS"
+	;;
+pf)
+	CPPFLAGS="-DHAVE_PF $CPPFLAGS"
+	;;
+*)
+	AC_MSG_ERROR([neither Linux NetFilter nor BSD pf detected.])
+	;;
+esac
+
 AC_OUTPUT(Makefile)
