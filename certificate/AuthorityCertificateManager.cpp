@@ -56,7 +56,7 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
   X509_NAME *issuerName   = X509_get_subject_name(authority->getCert());
   X509 *request           = X509_new();
 
-  X509_set_version(request, 3);
+  X509_set_version(request, 2); /* version is zero-based: 2 is X509v3 */
   X509_set_subject_name(request, serverName);
   X509_set_issuer_name(request, issuerName);
 
@@ -64,6 +64,35 @@ void AuthorityCertificateManager::getCertificateForTarget(boost::asio::ip::tcp::
   X509_gmtime_adj(X509_get_notBefore(request), -365);
   X509_gmtime_adj(X509_get_notAfter(request), (long)60*60*24*365);
   X509_set_pubkey(request, this->leafPair);
+
+  X509V3_CTX ctx;
+  X509_EXTENSION *ext;
+  int extpos;
+  X509V3_set_ctx(&ctx, authority->getCert(), request, NULL, NULL, 0);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"basicConstraints",
+			(char*)"critical,CA:FALSE"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"keyUsage",
+			(char*)"digitalSignature,keyEncipherment"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"extendedKeyUsage",
+			(char*)"serverAuth"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"subjectKeyIdentifier",
+			(char*)"hash"), -1);
+  X509_EXTENSION_free(ext);
+  X509_add_ext(request, ext = X509V3_EXT_conf(NULL, &ctx,
+			(char*)"authorityKeyIdentifier",
+			(char*)"keyid,issuer:always"), -1);
+  X509_EXTENSION_free(ext);
+  extpos = X509_get_ext_by_NID(serverCertificate, NID_subject_alt_name, -1);
+  if (extpos != -1) {
+    X509_add_ext(request, X509_get_ext(serverCertificate, extpos), -1);
+  }
 
   X509_sign(request, authority->getKey(), EVP_sha1());
 
