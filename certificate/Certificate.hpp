@@ -173,7 +173,7 @@ public:
   }
 
   bool isWildcard() {
-    return name == "*";
+    return name[0] == '*';
   }
 };
 
