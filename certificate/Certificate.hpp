@@ -92,16 +92,12 @@ private:
   }
 
   void parseCommonName(X509 *cert) {
-    std::string distinguishedName(cert->name);
-    std::string::size_type cnIndex = distinguishedName.find("CN=");
-
-    if (cnIndex == std::string::npos) throw BadCertificateException();
-
-    std::string commonName           = distinguishedName.substr(cnIndex+3);    
-    std::string::size_type nullIndex = commonName.find("\\x00");
-    
-    if (nullIndex != std::string::npos) this->name = commonName.substr(0, nullIndex);
-    else                                this->name = commonName;
+    X509_NAME *ptr = X509_get_subject_name(cert);
+    int sz = X509_NAME_get_text_by_NID(ptr, NID_commonName, NULL, 0) + 1;
+    char *commonNameStr = (char*)malloc(sz);
+    X509_NAME_get_text_by_NID(ptr, NID_commonName, commonNameStr, sz);
+    this->name = std::string((const char*)commonNameStr);
+    free(commonNameStr);
   }
 
 public:

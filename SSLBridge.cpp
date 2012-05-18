@@ -57,17 +57,13 @@ ip::tcp::endpoint SSLBridge::getRemoteEndpoint() {
 }
 
 void SSLBridge::setServerName() {
-  X509 *serverCertificate    = getServerCertificate();
-  X509_NAME *serverNameField = X509_get_subject_name(serverCertificate);
-  char *serverNameStr        = X509_NAME_oneline(serverNameField, NULL, 0);
-
-  this->serverName = std::string((const char*)serverNameStr);
-  int commonNameIndex;
-
-  if ((commonNameIndex = this->serverName.find("CN=")) != std::string::npos)
-    this->serverName = this->serverName.substr(commonNameIndex+3);
-  
-  free(serverNameStr);
+  X509 *serverCertificate = getServerCertificate();
+  X509_NAME *ptr = X509_get_subject_name(serverCertificate);
+  int sz = X509_NAME_get_text_by_NID(ptr, NID_commonName, NULL, 0) + 1;
+  char *commonNameStr = (char*)malloc(sz);
+  X509_NAME_get_text_by_NID(ptr, NID_commonName, commonNameStr, sz);
+  this->serverName = std::string((const char*)commonNameStr);
+  free(commonNameStr);
 }
 
 void SSLBridge::handshakeWithClient(CertificateManager &manager, bool wildcardOK) {
