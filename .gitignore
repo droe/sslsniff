@@ -9,6 +9,7 @@ configure
 depcomp
 install-sh
 ltmain.sh
+libtool
 m4
 missing
 sslsniff
