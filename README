@@ -103,10 +103,27 @@ Setting up iptables
 Setting up pf
 -------------
 
-Basic support for pf is now included. Set up firewall rules similar to
-those above, and change util/Destination.cpp by undefining HAVE_NETFILTER
-and defining HAVE_PF at the top.
+Basic support for pf is now included. Change util/Destination.cpp by
+undefining HAVE_NETFILTER and defining HAVE_PF at the top, then set up
+firewall rules similar to above:
 
+    * Enable IP forwarding:
+      (sysctl net.inet.ip.forwarding=1)
+
+    * Add rules to /etc/pf.conf to intercept traffic; OpenBSD 4.7 and later:
+      (match in on $extif proto tcp to any port {443,993,995,6697} \
+       rdr-to lo0 port $listenPort
+       match in on $extif proto tcp to any port 80 \
+       rdr-to lo0 port $httpListenPort)
+
+    * The same using OpenBSD up to 4.6 and FreeBSD:
+      (rdr on $extif proto tcp to any port {443,993,995,6697} \
+       -> lo0 port $listenPort
+       rdr on $extif proto tcp to any port 80 \
+       -> lo0 port $httpListenPort)
+
+    * Reload pf rules:
+      (pfctl -f /etc/pf.conf)
 
 Running arpspoof
 --------------------------
